@@ -1,0 +1,10 @@
+
+#django latest as per sep 29 2026
+Django==6.1.1
+#django restframework as per ^
+djangorestframework==3.18.1
+#django-cors
+django-cors-headers
+#simple jwt
+djangorestframework-simplejwt==5.5.1
+

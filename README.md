@@ -1,73 +1,97 @@
-# supermax
-A mono repo minimaly maximum supermarket Business Operations Platform
+# Supermax: Lightweight Supermarket ERP
 
+> A “minimally maximum” business operations platform that unifies inventory, payroll, and financial ledgers into a single source of truth.
 
+## Overview
 
-# supermax: Lightweight Supermarket ERP
+Many mid-sized retail operations rely on disconnected HR systems, inventory spreadsheets, and accounting tools. This fragmentation creates data delays, duplicated work, and financial discrepancies.
 
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![Celery](https://img.shields.io/badge/Celery-37814A?style=for-the-badge&logo=celery&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+**Supermax** demonstrates how these operational workflows can be unified through a transactional architecture. The project intentionally avoids unnecessary enterprise complexity and focuses on high-impact engineering challenges, including:
 
-> **A "Minimally Maximum" Business Operations Platform bridging inventory, payroll, and financial ledgers into a single source of truth.**
+- ACID-compliant data flows
+- Role-based access control (RBAC)
+- Automated payroll processing
+- Asynchronous background tasks
+- Inventory and financial ledger integration
 
-## 🎯 The Objective
-Most mid-sized retail operations duct-tape their back office together using disconnected HR software, inventory spreadsheets, and accounting tools. This creates data lag and financial discrepancies. 
+## Key Features
 
-**supermax** is built to demonstrate how to solve this using a unified, transactional architecture. It intentionally strips away enterprise bloat to focus on high-impact technical challenges: **ACID-compliant data flows, role-based access control (RBAC), and asynchronous background processing.**
+### 1. Unified Inventory and Financial Ledger
 
-## 🚀 Key Features & Technical Implementation
-
-### 1. Unified Inventory & Financial Ledger
-Inventory isn't just tracked; it is tied directly to the financial ledger. 
-* **The Feature:** When stock is purchased and added to inventory, a corresponding expense is automatically logged in the financial ledger. 
-* **The Tech:** Utilizes Django's `transaction.atomic()` block. If the financial ledger update fails, the inventory addition rolls back automatically, guaranteeing data integrity and preventing "ghost stock."
+Inventory activity is linked directly to the financial ledger, helping ensure that stock movements and their associated financial transactions remain consistent.
 
 ### 2. Automated Payroll Engine
-Payroll calculation shouldn't be manual data entry.
-* **The Feature:** Staff are assigned roles (Cashier, Manager, etc.) with specific hourly rates. At the end of the month, salaries are automatically calculated and logged as pending payouts.
-* **The Tech:** Powered by **Celery and Redis**. A `celery-beat` cron job fires on the 1st of the month, querying staff data, executing the payroll logic, and batch-inserting the financial records in the background without blocking the main application thread.
 
-### 3. Role-Based Staff & Communications 
-Information needs to be siloed based on authority.
-* **The Feature:** System admins can onboard/offboard staff and assign roles. Targeted announcements can be broadcasted globally or restricted to specific roles (e.g., "Cashiers Only").
-* **The Tech:** Strict RBAC implemented via Django REST Framework permissions and JWT authentication. The React frontend consumes these permissions to dynamically render (or hide) dashboard widgets and navigation routes.
+Payroll calculations are generated from staff and attendance data, reducing manual data entry and improving calculation accuracy.
+
+### 3. Role-Based Staff Management and Communications
+
+Access to operational information is restricted according to user roles and responsibilities. This helps keep sensitive staff, payroll, and financial data appropriately siloed.
 
 ### 4. Financial Dashboard
-* **The Feature:** A clean, at-a-glance visualization of Money In (Sales) vs. Money Out (Inventory + Payroll).
-* **The Tech:** Uses complex Django ORM aggregations (`Sum`, `TruncMonth`) to efficiently group financial data at the database level before serving it to the React frontend for rendering via minimal geometric charts.
 
-## 🛠️ Tech Stack
+A centralized dashboard provides an at-a-glance view of:
 
-* **Frontend:** React, Vite, Tailwind CSS (Clean, light-themed corporate UI with deep blue `#1E3A5F` accents), Lucide Icons.
-* **Backend:** Python, Django, Django REST Framework.
-* **Database:** PostgreSQL.
-* **Async Workers:** Celery, Redis.
+- Money coming in from sales
+- Money going out through inventory purchases
+- Payroll and other operational expenses
 
-## 💻 Quick Start
+## Technology Stack
+
+- **Frontend:** React, Vite, Tailwind CSS, Lucide Icons
+- **Backend:** Python, Django, Django REST Framework
+- **Database:** SQLite3
+
+## Quick Start
 
 ### Backend Setup
+
 ```bash
 # Clone the repository
-git clone [https://github.com/AIIM00773/supermax.git](https://github.com/AIIM00773/supermax.git)
+git clone https://github.com/AIIM00773/supermax.git
+
+# Navigate to the backend
 cd supermax/backend
 
-# Create virtual environment and install dependencies
+# Create and activate a virtual environment
 python -m venv venv
 source venv/bin/activate
+
+# On macOS/Linux:
+source venv/bin/activate
+
+# On Windows:
+# venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
 
-# Setup Database and run migrations
+# Apply database migrations
 python manage.py migrate
 
-# Start Redis (requires Redis to be installed)
-redis-server
-
-# Start Celery worker and beat scheduler
-celery -A supermax worker -l info
-celery -A supermax beat -l info
-
-# Run the Django server
+# Start the Django development server
 python manage.py runserver
+
+````
+
+
+The backend will be available at:
+text
+
+http://127.0.0.1:8000/
+
+### Project Status
+
+The frontend and backend are currently developed as separate components. Both are functional within their respective environments, but they are not yet fully integrated into a complete end-to-end application.
+
+To complete the integration:
+
+    Implement the frontend API service layer.
+    Connect frontend components to the existing Django REST Framework endpoints.
+    Configure the frontend and backend base URLs.
+    Add authentication and token-handling logic.
+    Verify data flow across inventory, payroll, staff, and financial modules.
+    Add integration tests for the primary workflows.
+
+### Contributing
+No contributions are allowed yet 
